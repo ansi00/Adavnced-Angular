@@ -18,20 +18,20 @@
 <!-- <h1 [style.color]="bool ? 'red' : 'green'">Style Binding</h1> -->
 
 <!-- event binding -->
- <!-- <button (click)="buttonCLick()">Click</button> -->
+<!-- <button (click)="buttonCLick()">Click</button> -->
 <!-- <br> -->
 
- <!-- event filtering -->
+<!-- event filtering -->
 
- <!-- <input type="text" (keyup.enter)="onKeyUp($event)"> -->
+<!-- <input type="text" (keyup.enter)="onKeyUp($event)"> -->
 
- <!-- Two way data binding -->
+<!-- Two way data binding -->
 
- <!-- <input type="text" [(ngModel)]="userName" (keyup.enter)="onKeyUpForNgModel()"/> -->
+<!-- <input type="text" [(ngModel)]="userName" (keyup.enter)="onKeyUpForNgModel()"/> -->
 
 <!-- Challenge -->
 
- <!-- <div class="center">
+<!-- <div class="center">
     <h1>Post Form</h1>
     <input type="text" placeholder="Post title" [(ngModel)]="title" ><br><br>
     <textarea placeholder="Post Details" rows="12" cols="35" [(ngModel)]="details" ></textarea><br><br>
@@ -46,13 +46,12 @@
   </div>
    -->
 
-   <!-- Directives practise -->
+<!-- Directives practise -->
 
-   <!-- With String Array -->
+<!-- With String Array -->
 <!-- <ul >
     <li *ngFor="let post of postArray">{{post}}</li>
 </ul> -->
-
 
 <!-- <button (click)="addData()">Add new Data </button> -->
 <!-- With Object Array -->
@@ -66,7 +65,6 @@
 <ng-template #noData>
     <h3>No Data to show</h3>
 </ng-template> -->
-
 
 <!-- Switch Directive -->
 <!-- <div>
@@ -82,15 +80,12 @@
 <div *ngSwitchDefault>Something Else</div>
 </div> -->
 
-
 <!-- NgStyle Directive -->
 
 <!-- <h1 [ngStyle]="{
     color : isActive ? 'red' : 'black',
     textTransform : isActive ? 'uppercase' : 'lowecase'
 }">NgStyle Directive</h1> -->
-
-
 
 <!-- NgClass Directive -->
 
@@ -99,7 +94,6 @@
     'uppercase' : isActive
 }"
 >NgClass Directive</h1> -->
-
 
 <!-- Directives Challenge Solution -->
 
@@ -144,7 +138,6 @@
 <!-- <h1>{{userDetails.city | append}}</h1>
 <h1>{{userDetails.city | appendCLI}}</h1> -->
 
-
 <!-- <p>{{dummyText | summary : 50}}</p> -->
 
 <!-- creating services (manually) -->
@@ -152,3 +145,78 @@
 <!-- <app-post></app-post> -->
 
 <!-- <app-post-list></app-post-list>  -->
+
+<!-- Working with template-driven forms -->
+
+<div class="container mt-5">
+  <div class="form-area">
+    <form #f="ngForm" (ngSubmit)="onSubmit(f)">
+      <div class="form-group">
+        <label>Full Name</label>
+        <input
+          type="text"
+          placeholder="Enter full name"
+          class="form-control"
+          name="fullName"
+          ngModel
+          #fullName="ngModel"
+          (ngModelChange)="getValue(fullName)"
+          required
+          minlength="5"
+          [ngClass]="{'is-invalid' : fullName.touched && fullName.invalid}"
+        />
+        <div *ngIf="fullName?.errors?.['required']">
+            <div class="alert alert-danger" *ngIf="fullName.touched && fullName.invalid">Full Name is required</div>
+ </div>
+
+ <div *ngIf="fullName?.errors?.['minlength']">
+    <div class="alert alert-danger" *ngIf="fullName.touched && fullName.invalid">Full Name must be 5 characters</div>
+</div>
+      </div>
+
+
+      <div class="form-group">
+        <label>Email</label>
+        <input
+          type="email"
+          placeholder="Enter email"
+          class="form-control"
+          name="email"
+          ngModel
+          #email = 'ngModel'
+          pattern="[a-zA-Z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$"
+          required
+          [ngClass]="{'is-invalid' : email.touched && email.invalid}"
+        />
+
+        <div *ngIf="email?.errors?.['required']">
+            <div class="alert alert-danger" *ngIf="email.touched && fullName.invalid">Email is required</div>
+ </div>
+
+ <div *ngIf="email?.errors?.['pattern']">
+    <div class="alert alert-danger" *ngIf="email.touched && fullName.invalid">Invalid Email</div>
+</div>
+      </div>
+      <div class="form-group">
+        <label>Address</label>
+        <textarea
+          placeholder="Enter Address"
+          rows="10"
+          cols="20"
+          class="form-control"
+          name="address"
+          ngModel
+          #address = "ngModel"
+          required
+          [ngClass]="{'is-invalid' : address.touched && address.invalid}"
+        ></textarea>
+        <div *ngIf="address?.errors?.['required']">
+            <div class="alert alert-danger" *ngIf="address.touched && fullName.invalid">Address is required</div>
+ </div>
+      </div>
+      <div class="mt-2">
+        <button type="submit" [disabled]="f.invalid" class="btn btn-primary">Submit</button>
+      </div>
+    </form>
+  </div>
+</div>

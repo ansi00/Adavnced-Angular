@@ -3,7 +3,7 @@ import { RouterOutlet } from '@angular/router';
 import { NavbarComponent } from './navbar/navbar.component';
 import { PostComponent } from './post/post.component';
 import { CommonModule, NgFor, NgIf } from '@angular/common';
-import { FormsModule, NgModel } from '@angular/forms';
+import { FormControl, FormsModule, NgForm, NgModel } from '@angular/forms';
 import { AppendPipe } from './Pipes/append.pipe';
 import { AppendCLIPipe } from './Pipes/append-cli.pipe';
 import { SummaryPipe } from './Pipes/summary.pipe';
@@ -151,6 +151,16 @@ export class AppComponent implements AfterViewInit {
 // dummyText : string = "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like)."
  
 
+// Working with template driven forms
 
+onSubmit(f:NgForm){
+console.log(f.value);
+
+}
+
+getValue(f:NgModel){
+console.log(f);
+
+}
 
 }
