@@ -1,9 +1,9 @@
-import { Component, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, ViewChild, AfterViewInit, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { NavbarComponent } from './navbar/navbar.component';
 import { PostComponent } from './post/post.component';
 import { CommonModule, NgFor, NgIf } from '@angular/common';
-import { FormControl, FormsModule, NgForm, NgModel } from '@angular/forms';
+import { FormsModule, NgForm, FormBuilder, NgModel, ReactiveFormsModule, FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
 import { AppendPipe } from './Pipes/append.pipe';
 import { AppendCLIPipe } from './Pipes/append-cli.pipe';
 import { SummaryPipe } from './Pipes/summary.pipe';
@@ -18,12 +18,12 @@ import { PostService } from './Services/post.service';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, NavbarComponent,PostListComponent, PostComponent, NgIf,FormsModule, NgFor, CommonModule, AppendPipe, AppendCLIPipe, SummaryPipe],
+  imports: [RouterOutlet,ReactiveFormsModule, NavbarComponent,PostListComponent, PostComponent, NgIf,FormsModule, NgFor, CommonModule, AppendPipe, AppendCLIPipe, SummaryPipe],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
   providers : [PostService]
 })
-export class AppComponent implements AfterViewInit {
+export class AppComponent implements AfterViewInit{
 //   parentMessage: string = 'Message coming from the parent component';
 //   message: string = '';
 //   outputMessage : string = '';
@@ -153,14 +153,99 @@ export class AppComponent implements AfterViewInit {
 
 // Working with template driven forms
 
-onSubmit(f:NgForm){
-console.log(f.value);
+// onSubmit(f:NgForm){
+// console.log(f.value);
 
+// }
+
+// getValue(f:NgModel){
+// console.log(f);
+
+// }
+
+
+// Working with Reactive forms
+
+form: FormGroup;
+emailRegex : string = '[a-zA-Z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$';
+contactRegex : string = '[789][0-9]{9}'
+
+
+// FormBuilder cleaner Approach
+
+constructor(fb : FormBuilder) {
+
+this.form = fb.group({
+  fullName : ['', [Validators.required, Validators.minLength(5)]],
+  email : ['', [Validators.required, Validators.pattern(this.emailRegex)]],
+  contactDetails : fb.group({
+    address : ['', Validators.required],
+    shippingAddress : ['', Validators.required],
+    contactNo : ['', [Validators.required , Validators.pattern(this.contactRegex)] ]
+  }),
+skills : fb.array([])
+})
+
+
+// Traditional Approach for formGroups and formControls
+
+//   this.form = new FormGroup({
+//     fullName: new FormControl('', [Validators.required, Validators.minLength(5)]),
+//     email: new FormControl('', [Validators.required, Validators.pattern(this.emailRegex)]),
+//     contactDetails: new FormGroup({
+//       address: new FormControl('', [Validators.required]),
+//       shippingAddress: new FormControl('', [Validators.required]),
+//       contactNo: new FormControl('', [Validators.required , Validators.pattern(this.contactRegex)])
+//     }),
+
+// skills : new FormArray([])
+
+//   });
 }
 
-getValue(f:NgModel){
-console.log(f);
-
+get fullName() {
+  return this.form.get('fullName');
 }
 
+get email() {
+  return this.form.get('email');
 }
+
+get contactDetails() {
+  return this.form.get('contactDetails') as FormGroup;
+}
+
+get address() {
+  return this.contactDetails.get('address');
+}
+
+get shippingAddress() {
+  return this.contactDetails.get('shippingAddress');
+}
+
+get contactNo() {
+  return this.contactDetails.get('contactNo');
+}
+
+ get skills(){
+  return this.form.get('skills') as FormArray;
+}
+
+onSubmit(){
+  console.log(this.form.value);
+  
+}
+
+addSkills(skill: HTMLInputElement) {
+  if (skill.value) {
+    this.skills.push(new FormControl(skill.value));
+    skill.value = '';  
+    console.log(this.form.value);
+  }
+}
+
+removeSkills(index:number){
+this.skills.removeAt(index)
+}
+}
+
